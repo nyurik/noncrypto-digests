@@ -7,11 +7,27 @@
 [![CI build](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
 
 
-Use this crate wraps various non-cryptographic hashing functions as Digests.
+Expose various non-cryptographic hashing functions with Digest traits.  This allows users to use any hashing function with the same trait interface, and switch between them easily.
 
 ## Usage
 
-TODO
+```rust
+use digest::Digest;
+use hex::ToHex;
+use noncrypto_digests::Fnv;
+
+/// This function takes any Digest type, and returns a hex-encoded string.
+pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
+  let mut hasher = T::new();
+  hasher.update(data);
+  hasher.finalize().to_vec().encode_hex_upper()
+}
+
+fn main() {
+  // Use Fnv hash
+  assert_eq!(hash::<Fnv>("password"), "18A3B30735491A4B");
+}
+```
 
 ## Development
 * This project is easier to develop with [just](https://github.com/casey/just#readme), a modern alternative to `make`. Install it with `cargo install just`.
