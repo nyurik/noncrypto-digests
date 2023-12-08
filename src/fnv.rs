@@ -27,21 +27,25 @@ impl Update for Fnv {
 impl FixedOutput for Fnv {
     fn finalize_into(self, out: &mut Output<Self>) {
         let result = self.0.finish();
-        let bytes = result.to_ne_bytes();
+        let bytes = result.to_be_bytes();
         out.copy_from_slice(&bytes);
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use fnv::FnvHasher;
     use insta::assert_snapshot;
+    use std::hash::Hasher;
 
     use super::Fnv;
     use crate::tests::hash;
 
     #[test]
     fn test_fnv() {
-        assert_snapshot!(hash::<Fnv>(""), @"25232284E49CF2CB");
-        assert_snapshot!(hash::<Fnv>("hello"), @"0BBDAA8046D830A4");
+        let default = FnvHasher::default().finish();
+        assert_eq!(hash::<Fnv>(""), format!("{default:X}"));
+        assert_snapshot!(hash::<Fnv>(""), @"CBF29CE484222325");
+        assert_snapshot!(hash::<Fnv>("hello"), @"A430D84680AABD0B");
     }
 }

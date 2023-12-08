@@ -12,5 +12,5 @@ pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
 #[test]
 #[cfg(feature = "fnv")]
 fn fnv() {
-    assert_snapshot!(hash::<noncrypto_digests::Fnv>("password"), @"18A3B30735491A4B");
+    assert_snapshot!(hash::<noncrypto_digests::Fnv>("password"), @"4B1A493507B3A318");
 }

@@ -25,7 +25,7 @@ pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
 
 fn main() {
   // Use Fnv hash
-  assert_eq!(hash::<Fnv>("password"), "18A3B30735491A4B");
+  assert_eq!(hash::<Fnv>("password"), "4B1A493507B3A318");
 }
 ```
 
