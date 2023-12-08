@@ -1,6 +1,6 @@
 [package]
 name = "noncrypto-digests"
-version = "0.1.0"
+version = "0.2.0"
 description = "Expose various non-cryptographic hashing functions with Digest traits"
 authors = ["Yuri Astrakhan <YuriAstrakhan@gmail.com>"]
 repository = "https://github.com/nyurik/noncrypto-digests"

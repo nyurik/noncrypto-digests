@@ -7,6 +7,9 @@ compile_error!("At least one of the features `fnv` must be enabled.");
 #[cfg(feature = "fnv")]
 mod fnv;
 
+#[cfg(feature = "fnv")]
+pub use fnv::Fnv;
+
 #[cfg(test)]
 mod tests {
     use std::panic::{RefUnwindSafe, UnwindSafe};
