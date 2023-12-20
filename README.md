@@ -14,7 +14,7 @@ Expose various non-cryptographic hashing functions with Digest traits.  This all
 ```rust
 use digest::Digest;
 use hex::ToHex;
-use noncrypto_digests::Fnv;
+use noncrypto_digests::{Fnv, Xxh3_64, Xxh3_128};
 
 /// This function takes any Digest type, and returns a hex-encoded string.
 pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
@@ -26,6 +26,10 @@ pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
 fn main() {
   // Use Fnv hash
   assert_eq!(hash::<Fnv>("password"), "4B1A493507B3A318");
+  // Use Xxh3 64bit hash
+  assert_eq!(hash::<Xxh3_64>("password"), "336576D7E0E06F9A");
+  // Use Xxh3 128bit hash
+  assert_eq!(hash::<Xxh3_128>("password"), "9CFA9055952177DA0B120BE86072A8F0");
 }
 ```
 
