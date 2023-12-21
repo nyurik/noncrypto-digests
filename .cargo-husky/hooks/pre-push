@@ -20,7 +20,7 @@ cargo build
 cargo test --workspace --all-targets --all-features --bins --tests --lib --benches
 
 { set +x ;} 2> /dev/null
-for hash in "fnv" "xxh3"; do
+for hash in "fnv" "xxh3" "xxh32" "xxh64"; do
   echo "################################################################################################################################"
   set -x
   cargo test --no-default-features --lib --bins --examples --tests --benches --features "$hash"

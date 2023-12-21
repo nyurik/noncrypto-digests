@@ -1,26 +1,25 @@
+use std::hash::Hasher as _;
+
+pub use ::xxhash_rust::xxh3::Xxh3 as Xxh3Hasher;
 use digest::typenum::{U16, U8};
 use digest::{FixedOutput, HashMarker, Output, OutputSizeUser, Update};
-use std::hash::Hasher as _;
-use xxhash_rust::xxh3::Xxh3;
+
+use crate::common::{impl_hash_wrapper, HashWrapper};
 
 macro_rules! make_hasher {
-    ($name:ident, $internal:ty, $digest:expr, $output_size:ident) => {
+    ($hash_wrapper:ident, $hasher:ty, $digest:expr, $output_size:ident) => {
         #[derive(Clone, Default)]
-        pub struct $name($internal);
+        pub struct $hash_wrapper($hasher);
 
-        impl OutputSizeUser for $name {
-            type OutputSize = $output_size;
-        }
+        impl_hash_wrapper!($hash_wrapper, $hasher, $output_size);
 
-        impl HashMarker for $name {}
-
-        impl Update for $name {
+        impl Update for $hash_wrapper {
             fn update(&mut self, data: &[u8]) {
                 self.0.write(data);
             }
         }
 
-        impl FixedOutput for $name {
+        impl FixedOutput for $hash_wrapper {
             fn finalize_into(self, out: &mut Output<Self>) {
                 let result = $digest(&self.0);
                 let bytes = result.to_be_bytes();
@@ -30,8 +29,8 @@ macro_rules! make_hasher {
     };
 }
 
-make_hasher!(Xxh3_64, Xxh3, Xxh3::digest, U8);
-make_hasher!(Xxh3_128, Xxh3, Xxh3::digest128, U16);
+make_hasher!(Xxh3_64, Xxh3Hasher, Xxh3Hasher::digest, U8);
+make_hasher!(Xxh3_128, Xxh3Hasher, Xxh3Hasher::digest128, U16);
 
 #[cfg(test)]
 mod tests {

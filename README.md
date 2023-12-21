@@ -7,29 +7,30 @@
 [![CI build](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
 
 
-Expose various non-cryptographic hashing functions with Digest traits.  This allows users to use any hashing function with the same trait interface, and switch between them easily.
+Implement [digest::Digest](https://docs.rs/digest/latest/digest/trait.Digest.html) trait for non-cryptographic hashing functions like fnv and xxhash. This allows users to use all cryptographic and non-cryptographic hashing functions polymorphically.
 
 ## Usage
 
 ```rust
 use digest::Digest;
 use hex::ToHex;
-use noncrypto_digests::{Fnv, Xxh3_64, Xxh3_128};
+use noncrypto_digests::{Fnv, Xxh3_64, Xxh3_128, Xxh32, Xxh64};
 
 /// This function takes any Digest type, and returns a hex-encoded string.
 pub fn hash<T: Digest>(data: impl AsRef<[u8]>) -> String {
+  // Note that some hashers provide seed value set to 0 by default.
+  // Use `...::from_hasher(hasher)` function to instantiate them.
   let mut hasher = T::new();
   hasher.update(data);
   hasher.finalize().to_vec().encode_hex_upper()
 }
 
 fn main() {
-  // Use Fnv hash
   assert_eq!(hash::<Fnv>("password"), "4B1A493507B3A318");
-  // Use Xxh3 64bit hash
   assert_eq!(hash::<Xxh3_64>("password"), "336576D7E0E06F9A");
-  // Use Xxh3 128bit hash
   assert_eq!(hash::<Xxh3_128>("password"), "9CFA9055952177DA0B120BE86072A8F0");
+  assert_eq!(hash::<Xxh32>("password"), "106C6CED");
+  assert_eq!(hash::<Xxh64>("password"), "90007DAF3980EF1F");
 }
 ```
 

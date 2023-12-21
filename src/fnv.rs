@@ -1,16 +1,15 @@
 use std::hash::Hasher as StdHasher;
 
+pub use ::fnv::FnvHasher;
+use digest::typenum::U8;
 use digest::{FixedOutput, HashMarker, Output, OutputSizeUser, Update};
-use fnv::FnvHasher;
+
+use crate::common::{impl_hash_wrapper, HashWrapper};
 
 #[derive(Default)]
 pub struct Fnv(FnvHasher);
 
-impl OutputSizeUser for Fnv {
-    type OutputSize = digest::typenum::U8;
-}
-
-impl HashMarker for Fnv {}
+impl_hash_wrapper!(Fnv, FnvHasher, U8);
 
 impl Clone for Fnv {
     fn clone(&self) -> Self {
@@ -34,11 +33,9 @@ impl FixedOutput for Fnv {
 
 #[cfg(test)]
 mod tests {
-    use fnv::FnvHasher;
     use insta::assert_snapshot;
-    use std::hash::Hasher;
 
-    use super::Fnv;
+    use super::*;
     use crate::tests::hash;
 
     #[test]

@@ -1,7 +1,7 @@
 [package]
 name = "noncrypto-digests"
-version = "0.2.3"
-description = "Expose various non-cryptographic hashing functions with Digest traits"
+version = "0.3.0"
+description = "Implement Digest trait for non-cryptographic hashing functions like fnv and xxhash"
 authors = ["Yuri Astrakhan <YuriAstrakhan@gmail.com>"]
 repository = "https://github.com/nyurik/noncrypto-digests"
 edition = "2021"
@@ -11,9 +11,11 @@ categories = ["cryptography"]
 rust-version = "1.60.0"
 
 [features]
-default = ["fnv", "xxh3"]
+default = ["fnv", "xxh3", "xxh32", "xxh64"]
 fnv = ["dep:fnv"]
 xxh3 = ["dep:xxhash-rust", "xxhash-rust?/xxh3"]
+xxh32 = ["dep:xxhash-rust", "xxhash-rust?/xxh32"]
+xxh64 = ["dep:xxhash-rust", "xxhash-rust?/xxh64"]
 
 [dependencies]
 digest = "0.10.7"
@@ -30,3 +32,4 @@ unused_qualifications = "warn"
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
