@@ -10,6 +10,7 @@
 compile_error!("At least one of these features must be enabled: fnv, xxh3, xxh32, xxh64");
 
 mod common;
+pub use crate::common::HashWrapper;
 
 #[cfg(feature = "fnv")]
 mod fnv;
