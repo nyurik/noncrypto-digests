@@ -9,15 +9,20 @@ clean:
     rm -f Cargo.lock
 
 # Run cargo fmt and cargo clippy
-lint: fmt clippy
+lint: test-fmt clippy
+
+# Run cargo clippy
+clippy:
+    cargo clippy --bins --tests --lib --benches --examples -- -D warnings
+    cargo clippy --all-features -- -D warnings
+
+# Test code formatting
+test-fmt:
+    cargo fmt --all -- --check
 
 # Run cargo fmt
 fmt:
     cargo +nightly fmt -- --config imports_granularity=Module,group_imports=StdExternalCrate
-
-# Run cargo clippy
-clippy:
-    cargo clippy --workspace --all-targets --bins --tests --lib --benches -- -D warnings
 
 # Build and open code documentation
 docs:
@@ -25,11 +30,21 @@ docs:
 
 # Run all tests
 test:
-    ./.cargo-husky/hooks/pre-push
+    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --all-features
+    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features fnv
+    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh3
+    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh32
+    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh64
 
 # Test documentation
 test-doc:
     cargo test --doc
+    RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
+
+# Run all tests as expected by CI
+ci-test: && lint test test-doc
+    rustc --version
+    cargo --version
 
 # Run integration tests and save its output as the new expected output
 bless *ARGS: (cargo-install "insta" "cargo-insta")
