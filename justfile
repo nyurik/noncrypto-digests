@@ -46,13 +46,15 @@ test:
 
 # Test documentation
 test-doc:
-    cargo test --doc
+    RUSTFLAGS='-D warnings' cargo test --doc
     RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 
-# Run all tests as expected by CI
-ci-test: && test-fmt clippy check test test-doc
+rust-info:
     rustc --version
     cargo --version
+
+# Run all tests as expected by CI
+ci-test: rust-info test-fmt clippy check test test-doc
 
 # Run integration tests and save its output as the new expected output
 bless *ARGS: (cargo-install "insta" "cargo-insta")
