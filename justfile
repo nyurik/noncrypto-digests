@@ -8,13 +8,17 @@ clean:
     cargo clean
     rm -f Cargo.lock
 
-# Run cargo fmt and cargo clippy
-lint: test-fmt clippy
+update:
+    cargo +nightly -Z unstable-options update --breaking
+    cargo update
+
+build:
+    cargo build --all-targets
 
 # Run cargo clippy
 clippy:
-    cargo clippy --bins --tests --lib --benches --examples -- -D warnings
-    cargo clippy --all-features -- -D warnings
+    cargo clippy --all-targets -- -D warnings
+    cargo clippy --all-targets --all-features -- -D warnings
 
 # Test code formatting
 test-fmt:
@@ -28,13 +32,17 @@ fmt:
 docs:
     cargo doc --no-deps --open
 
+# Quick compile
+check:
+    RUSTFLAGS='-D warnings' cargo check --workspace --all-targets
+
 # Run all tests
 test:
-    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --all-features
-    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features fnv
-    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh3
-    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh32
-    RUSTFLAGS='-D warnings' cargo test --lib --bins --examples --tests --benches --no-default-features --features xxh64
+    RUSTFLAGS='-D warnings' cargo test --all-targets --all-features
+    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features fnv
+    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh3
+    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh32
+    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh64
 
 # Test documentation
 test-doc:
@@ -42,7 +50,7 @@ test-doc:
     RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 
 # Run all tests as expected by CI
-ci-test: && lint test test-doc
+ci-test: && test-fmt clippy check test test-doc
     rustc --version
     cargo --version
 
@@ -53,7 +61,7 @@ bless *ARGS: (cargo-install "insta" "cargo-insta")
 # Check if a certain Cargo command is installed, and install it if needed
 [private]
 cargo-install $COMMAND $INSTALL_CMD="" *ARGS="":
-    @if ! command -v $COMMAND &> /dev/null; then \
+    @if ! command -v $COMMAND > /dev/null; then \
         echo "$COMMAND could not be found. Installing it with    cargo install ${INSTALL_CMD:-$COMMAND} {{ ARGS }}" ;\
         cargo install ${INSTALL_CMD:-$COMMAND} {{ ARGS }} ;\
     fi
