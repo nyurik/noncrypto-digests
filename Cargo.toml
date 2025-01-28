@@ -8,7 +8,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 keywords = ["hash", "digest", "fnv", "xxhash", "xxh3"]
 categories = ["cryptography"]
-rust-version = "1.63.0"
+rust-version = "1.66.1"
 
 [features]
 default = ["fnv", "xxh3", "xxh32", "xxh64"]

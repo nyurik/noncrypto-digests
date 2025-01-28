@@ -1,7 +1,7 @@
 #!/usr/bin/env just --justfile
 
 @_default:
-    just --list --unsorted
+    just --list
 
 # Clean all build artifacts
 clean:
@@ -13,12 +13,12 @@ update:
     cargo update
 
 build:
-    cargo build --all-targets
+    cargo build --workspace --all-targets
 
 # Run cargo clippy
 clippy:
-    cargo clippy --all-targets -- -D warnings
-    cargo clippy --all-targets --all-features -- -D warnings
+    cargo clippy --workspace --all-targets -- -D warnings
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
 
 # Test code formatting
 test-fmt:
@@ -46,7 +46,6 @@ test:
 
 # Test documentation
 test-doc:
-    RUSTFLAGS='-D warnings' cargo test --doc
     RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 
 rust-info:
@@ -55,6 +54,9 @@ rust-info:
 
 # Run all tests as expected by CI
 ci-test: rust-info test-fmt clippy check test test-doc
+
+# Run minimal subset of tests to ensure compatibility with MSRV
+ci-test-msrv: rust-info check test
 
 # Run integration tests and save its output as the new expected output
 bless *ARGS: (cargo-install "insta" "cargo-insta")
