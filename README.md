@@ -5,6 +5,7 @@
 [![docs.rs docs](https://docs.rs/noncrypto-digests/badge.svg)](https://docs.rs/noncrypto-digests)
 [![crates.io version](https://img.shields.io/crates/l/noncrypto-digests.svg)](https://github.com/nyurik/noncrypto-digests/blob/main/LICENSE-APACHE)
 [![CI build](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/nyurik/noncrypto-digests)](https://app.codecov.io/gh/nyurik/noncrypto-digests)
 
 Implement [digest::Digest](https://docs.rs/digest/latest/digest/trait.Digest.html) trait for non-cryptographic hashing functions like fnv and xxhash. This allows users to use all cryptographic and non-cryptographic hashing functions polymorphically.
 
@@ -33,11 +34,10 @@ assert_eq!(hash::<Xxh64>("password"), "90007DAF3980EF1F");
 
 ## Development
 
-* This project is easier to develop with [just](https://github.com/casey/just#readme), a modern alternative to `make`. Install it with `cargo install just`.
+* This project is easier to develop with [just](https://github.com/casey/just#readme), a modern alternative to `make`.
+  Install it with `cargo install just`.
 * To get a list of available commands, run `just`.
 * To run tests, use `just test`.
-* On `git push`, it will run a few validations, including `cargo fmt`, `cargo clippy`, and `cargo test`.
-  Use `git push --no-verify` to skip these checks.
 
 ## License
 
