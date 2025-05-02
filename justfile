@@ -28,7 +28,7 @@ msrv:
     cargo msrv find --write-msrv --ignore-lockfile
 
 # Get the minimum supported Rust version (MSRV) for the crate
-get-msrv: (get-crate-field CRATE_NAME "rust_version")
+get-msrv: (get-crate-field "rust_version" CRATE_NAME)
 
 # Get any package's field from the metadata
 get-crate-field field package=CRATE_NAME:
