@@ -1,30 +1,39 @@
 #!/usr/bin/env just --justfile
 
-CRATE_NAME := "noncrypto-digests"
+main_crate := 'automotive_diag'
+
+# if running in CI, treat warnings as errors by setting RUSTFLAGS and RUSTDOCFLAGS to '-D warnings' unless they are already set
+# Use `CI=true just ci-test` to run the same tests as in GitHub CI.
+# Use `just env-info` to see the current values of RUSTFLAGS and RUSTDOCFLAGS
+export RUSTFLAGS := env('RUSTFLAGS', if env('CI', '') == 'true' {'-D warnings'} else {''})
+export RUSTDOCFLAGS := env('RUSTDOCFLAGS', if env('CI', '') == 'true' {'-D warnings'} else {''})
+export RUST_BACKTRACE := env('RUST_BACKTRACE', if env('CI', '') == 'true' {'1'} else {''})
 
 @_default:
     just --list
 
 # Run integration tests and save its output as the new expected output
-bless *ARGS: (cargo-install "insta" "cargo-insta")
-    cargo insta test --accept --unreferenced=delete --all-features {{ARGS}}
+bless *args:  (cargo-install 'cargo-insta')
+    cargo insta test --accept --unreferenced=delete --all-features {{args}}
 
+# Build the project
 build:
     cargo build --workspace --all-targets
 
 # Quick compile without building a binary
 check:
-    RUSTFLAGS='-D warnings' cargo check --workspace --all-targets
+    cargo check --workspace --all-targets
 
 # Verify that the current version of the crate is not the same as the one published on crates.io
-check-if-published:
+check-if-published:  (assert 'jq')
     #!/usr/bin/env bash
+    set -euo pipefail
     LOCAL_VERSION="$({{just_executable()}} get-crate-field version)"
-    echo "Detected crate version:  $LOCAL_VERSION"
+    echo "Detected crate version:  '$LOCAL_VERSION'"
     CRATE_NAME="$({{just_executable()}} get-crate-field name)"
-    echo "Detected crate name:     $CRATE_NAME"
+    echo "Detected crate name:     '$CRATE_NAME'"
     PUBLISHED_VERSION="$(cargo search ${CRATE_NAME} | grep "^${CRATE_NAME} =" | sed -E 's/.* = "(.*)".*/\1/')"
-    echo "Published crate version: $PUBLISHED_VERSION"
+    echo "Published crate version: '$PUBLISHED_VERSION'"
     if [ "$LOCAL_VERSION" = "$PUBLISHED_VERSION" ]; then
         echo "ERROR: The current crate version has already been published."
         exit 1
@@ -39,10 +48,18 @@ ci-coverage: && \
     mkdir -p target/llvm-cov
 
 # Run all tests as expected by CI
-ci-test: rust-info test-fmt clippy check test test-doc
+ci-test: env-info test-fmt clippy check test test-doc
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -n "$(git status --untracked-files --porcelain)" ]; then
+      >&2 echo 'ERROR: git repo is no longer clean. Make sure compilation and tests artifacts are in the .gitignore, and no repo files are modified.'
+      >&2 echo '######### git status ##########'
+      git status
+      exit 1
+    fi
 
 # Run minimal subset of tests to ensure compatibility with MSRV
-ci-test-msrv: rust-info check test
+ci-test-msrv: env-info check test
 
 # Clean all build artifacts
 clean:
@@ -50,23 +67,33 @@ clean:
     rm -f Cargo.lock
 
 # Run cargo clippy to lint the code
-clippy:
-    cargo clippy --workspace --all-targets -- -D warnings
-    cargo clippy --workspace --all-targets --all-features -- -D warnings
+clippy *args:
+    cargo clippy --workspace --all-targets {{args}}
+    cargo clippy --workspace --all-targets --all-features {{args}}
 
-# Generate code coverage report
-coverage *ARGS="--no-clean --open":
-    cargo llvm-cov --workspace --all-targets --include-build-script {{ARGS}}
+# Generate code coverage report. Will install `cargo llvm-cov` if missing.
+coverage *args='--no-clean --open':  (cargo-install 'cargo-llvm-cov')
+    cargo llvm-cov --workspace --all-targets --all-features --include-build-script {{args}}
 
 # Build and open code documentation
 docs:
     cargo doc --no-deps --open
 
+# Print environment info
+env-info:
+    @echo "Running on {{os()}} / {{arch()}}"
+    {{just_executable()}} --version
+    rustc --version
+    cargo --version
+    rustup --version
+    @echo "RUSTFLAGS='$RUSTFLAGS'"
+    @echo "RUSTDOCFLAGS='$RUSTDOCFLAGS'"
+
 # Reformat all code `cargo fmt`. If nightly is available, use it for better results
 fmt:
     #!/usr/bin/env bash
     set -euo pipefail
-    if command -v cargo +nightly &> /dev/null; then
+    if rustup component list --toolchain nightly | grep rustfmt &> /dev/null; then
         echo 'Reformatting Rust code using nightly Rust fmt to sort imports'
         cargo +nightly fmt --all -- --config imports_granularity=Module,group_imports=StdExternalCrate
     else
@@ -75,44 +102,39 @@ fmt:
     fi
 
 # Get any package's field from the metadata
-get-crate-field field package=CRATE_NAME:
+get-crate-field field package=main_crate:
     cargo metadata --format-version 1 | jq -r '.packages | map(select(.name == "{{package}}")) | first | .{{field}}'
 
 # Get the minimum supported Rust version (MSRV) for the crate
-get-msrv: (get-crate-field "rust_version" CRATE_NAME)
+get-msrv:  (get-crate-field 'rust_version')
 
 # Find the minimum supported Rust version (MSRV) using cargo-msrv extension, and update Cargo.toml
-msrv:
-    cargo msrv find --write-msrv --ignore-lockfile
-
-# Print Rust version information
-@rust-info:
-    rustc --version
-    cargo --version
+msrv:  (cargo-install 'cargo-msrv')
+    cargo msrv find --write-msrv --ignore-lockfile --all-features
 
 # Check semver compatibility with prior published version. Install it with `cargo install cargo-semver-checks`
-semver *ARGS:
-    cargo semver-checks {{ARGS}}
+semver *args:  (cargo-install 'cargo-semver-checks')
+    cargo semver-checks {{args}}
 
 # Run all tests
 test:
-    RUSTFLAGS='-D warnings' cargo test --all-targets --all-features
-    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features fnv
-    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh3
-    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh32
-    RUSTFLAGS='-D warnings' cargo test --all-targets --no-default-features --features xxh64
+    cargo test --all-targets --all-features
+    cargo test --all-targets --no-default-features --features fnv
+    cargo test --all-targets --no-default-features --features xxh3
+    cargo test --all-targets --no-default-features --features xxh32
+    cargo test --all-targets --no-default-features --features xxh64
 
 # Test documentation
 test-doc:
-    RUSTDOCFLAGS="-D warnings" cargo test --doc
-    RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
+    cargo test --doc --all-features
+    cargo doc --all-features --no-deps
 
 # Test code formatting
 test-fmt:
     cargo fmt --all -- --check
 
 # Find unused dependencies. Install it with `cargo install cargo-udeps`
-udeps:
+udeps:  (cargo-install 'cargo-udeps')
     cargo +nightly udeps --all-targets --workspace --all-features
 
 # Update all dependencies, including breaking changes. Requires nightly toolchain (install with `rustup install nightly`)
@@ -120,10 +142,25 @@ update:
     cargo +nightly -Z unstable-options update --breaking
     cargo update
 
+# Ensure that a certain command is available
+[private]
+assert command:
+    @if ! type {{command}} > /dev/null; then \
+        echo "Command '{{command}}' could not be found. Please make sure it has been installed on your computer." ;\
+        exit 1 ;\
+    fi
+
 # Check if a certain Cargo command is installed, and install it if needed
 [private]
-cargo-install $COMMAND $INSTALL_CMD="" *ARGS="":
-    @if ! command -v $COMMAND > /dev/null; then \
-        echo "$COMMAND could not be found. Installing it with    cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}}" ;\
-        cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}} ;\
+cargo-install $COMMAND $INSTALL_CMD='' *args='':
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! command -v $COMMAND > /dev/null; then
+        if ! command -v cargo-binstall > /dev/null; then
+            echo "$COMMAND could not be found. Installing it with    cargo install ${INSTALL_CMD:-$COMMAND} --locked {{args}}"
+            cargo install ${INSTALL_CMD:-$COMMAND} --locked {{args}}
+        else
+            echo "$COMMAND could not be found. Installing it with    cargo binstall ${INSTALL_CMD:-$COMMAND} --locked {{args}}"
+            cargo binstall ${INSTALL_CMD:-$COMMAND} --locked {{args}}
+        fi
     fi
