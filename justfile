@@ -9,24 +9,12 @@ CRATE_NAME := "noncrypto-digests"
 bless *ARGS: (cargo-install "insta" "cargo-insta")
     cargo insta test --accept --unreferenced=delete --all-features {{ARGS}}
 
-# Check if a certain Cargo command is installed, and install it if needed
-[private]
-cargo-install $COMMAND $INSTALL_CMD="" *ARGS="":
-    @if ! command -v $COMMAND > /dev/null; then \
-        echo "$COMMAND could not be found. Installing it with    cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}}" ;\
-        cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}} ;\
-    fi
-
 build:
     cargo build --workspace --all-targets
 
 # Quick compile without building a binary
 check:
     RUSTFLAGS='-D warnings' cargo check --workspace --all-targets
-
-# Generate code coverage report
-coverage *ARGS="--no-clean --open":
-    cargo llvm-cov --workspace --all-targets --include-build-script {{ARGS}}
 
 # Verify that the current version of the crate is not the same as the one published on crates.io
 check-if-published:
@@ -65,6 +53,10 @@ clean:
 clippy:
     cargo clippy --workspace --all-targets -- -D warnings
     cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+# Generate code coverage report
+coverage *ARGS="--no-clean --open":
+    cargo llvm-cov --workspace --all-targets --include-build-script {{ARGS}}
 
 # Build and open code documentation
 docs:
@@ -127,3 +119,11 @@ udeps:
 update:
     cargo +nightly -Z unstable-options update --breaking
     cargo update
+
+# Check if a certain Cargo command is installed, and install it if needed
+[private]
+cargo-install $COMMAND $INSTALL_CMD="" *ARGS="":
+    @if ! command -v $COMMAND > /dev/null; then \
+        echo "$COMMAND could not be found. Installing it with    cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}}" ;\
+        cargo install ${INSTALL_CMD:-$COMMAND} {{ARGS}} ;\
+    fi
