@@ -24,7 +24,7 @@ xxhash-rust = { version = "0.8.10", optional = true }
 
 [dev-dependencies]
 hex = "0.4"
-insta = { version = "1", features = [] }
+insta = "1"
 
 [lints.rust]
 unsafe_code = "forbid"
