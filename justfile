@@ -114,7 +114,7 @@ test:
     cargo test --all-targets --no-default-features --features xxh3
     cargo test --all-targets --no-default-features --features xxh32
     cargo test --all-targets --no-default-features --features xxh64
-    cargo test --doc {{features_flag}}
+    cargo test --workspace --doc {{features_flag}}
 
 # Test documentation generation
 test-doc: (docs '')
