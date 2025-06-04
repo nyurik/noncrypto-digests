@@ -1,10 +1,10 @@
 # noncrypto-digests
 
-[![GitHub](https://img.shields.io/badge/github-noncrypto--digests-8da0cb?logo=github)](https://github.com/nyurik/noncrypto-digests)
+[![GitHub repo](https://img.shields.io/badge/github-noncrypto--digests-8da0cb?logo=github)](https://github.com/nyurik/noncrypto-digests)
 [![crates.io version](https://img.shields.io/crates/v/noncrypto-digests)](https://crates.io/crates/noncrypto-digests)
-[![docs.rs](https://img.shields.io/docsrs/noncrypto-digests)](https://docs.rs/noncrypto-digests)
-[![license](https://img.shields.io/crates/l/noncrypto-digests)](https://github.com/nyurik/noncrypto-digests/blob/main/LICENSE-APACHE)
-[![CI build](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
+[![docs.rs status](https://img.shields.io/docsrs/noncrypto-digests)](https://docs.rs/noncrypto-digests)
+[![crates.io license](https://img.shields.io/crates/l/noncrypto-digests)](https://github.com/nyurik/noncrypto-digests/blob/main/LICENSE-APACHE)
+[![CI build status](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/nyurik/noncrypto-digests)](https://app.codecov.io/gh/nyurik/noncrypto-digests)
 
 Implement [digest::Digest](https://docs.rs/digest/latest/digest/trait.Digest.html) trait for non-cryptographic hashing functions like fnv and xxhash. This allows users to use all cryptographic and non-cryptographic hashing functions polymorphically.
