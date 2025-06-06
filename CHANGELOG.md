@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5](https://github.com/nyurik/noncrypto-digests/compare/v0.3.4...v0.3.5) - 2025-06-06
+
+### Other
+
+- set release-plz CI ([#15](https://github.com/nyurik/noncrypto-digests/pull/15))
+
 ## [0.3.4](https://github.com/nyurik/noncrypto-digests/compare/v0.3.3...v0.3.4) - 2025-06-06
 
 ### Added
