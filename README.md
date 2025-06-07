@@ -2,6 +2,7 @@
 
 [![GitHub repo](https://img.shields.io/badge/github-noncrypto--digests-8da0cb?logo=github)](https://github.com/nyurik/noncrypto-digests)
 [![crates.io version](https://img.shields.io/crates/v/noncrypto-digests)](https://crates.io/crates/noncrypto-digests)
+[![crate usage](https://img.shields.io/crates/d/noncrypto-digests)](https://crates.io/crates/noncrypto-digests)
 [![docs.rs status](https://img.shields.io/docsrs/noncrypto-digests)](https://docs.rs/noncrypto-digests)
 [![crates.io license](https://img.shields.io/crates/l/noncrypto-digests)](https://github.com/nyurik/noncrypto-digests/blob/main/LICENSE-APACHE)
 [![CI build status](https://github.com/nyurik/noncrypto-digests/actions/workflows/ci.yml/badge.svg)](https://github.com/nyurik/noncrypto-digests/actions)
