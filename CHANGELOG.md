@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.7](https://github.com/nyurik/noncrypto-digests/compare/v0.3.6...v0.3.7) - 2025-08-16
+
+### Other
+
+- update ci and justfile ([#22](https://github.com/nyurik/noncrypto-digests/pull/22))
+- [pre-commit.ci] pre-commit autoupdate ([#20](https://github.com/nyurik/noncrypto-digests/pull/20))
+- Bump actions/checkout from 4 to 5 in the all-actions-version-updates group ([#21](https://github.com/nyurik/noncrypto-digests/pull/21))
+- use release-plz token in dependabot ci
+
 ## [0.3.6](https://github.com/nyurik/noncrypto-digests/compare/v0.3.5...v0.3.6) - 2025-06-08
 
 ### Other
