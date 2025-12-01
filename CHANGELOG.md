@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.8](https://github.com/nyurik/noncrypto-digests/compare/v0.3.7...v0.3.8) - 2025-12-01
+
+### Other
+
+- add .editorconfig
+- minor justfile adjustments
+- *(deps)* bump actions/checkout from 5 to 6 in the all-actions-version-updates group ([#24](https://github.com/nyurik/noncrypto-digests/pull/24))
+- minor justfile adjustments
+
 ## [0.3.7](https://github.com/nyurik/noncrypto-digests/compare/v0.3.6...v0.3.7) - 2025-10-01
 
 ### Other
