@@ -20,7 +20,7 @@ pub use crate::fnv::{Fnv, FnvHasher};
 #[cfg(feature = "xxh3")]
 mod xxh3;
 #[cfg(feature = "xxh3")]
-pub use crate::xxh3::{Xxh3Hasher, Xxh3_128, Xxh3_64};
+pub use crate::xxh3::{Xxh3_64, Xxh3_128, Xxh3Hasher};
 
 #[cfg(feature = "xxh32")]
 mod xxh32;

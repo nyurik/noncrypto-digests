@@ -1,10 +1,10 @@
 use std::hash::Hasher as _;
 
 pub use ::xxhash_rust::xxh3::Xxh3 as Xxh3Hasher;
-use digest::typenum::{U16, U8};
+use digest::typenum::{U8, U16};
 use digest::{FixedOutput, HashMarker, Output, OutputSizeUser, Update};
 
-use crate::common::{impl_hash_wrapper, HashWrapper};
+use crate::common::{HashWrapper, impl_hash_wrapper};
 
 macro_rules! make_hasher {
     ($hash_wrapper:ident, $hasher:ty, $digest:expr, $output_size:ident) => {
@@ -35,9 +35,9 @@ make_hasher!(Xxh3_128, Xxh3Hasher, Xxh3Hasher::digest128, U16);
 #[cfg(test)]
 mod tests {
     use insta::assert_snapshot;
-    use xxhash_rust::xxh3::{xxh3_128, xxh3_64};
+    use xxhash_rust::xxh3::{xxh3_64, xxh3_128};
 
-    use super::{Xxh3_128, Xxh3_64};
+    use super::{Xxh3_64, Xxh3_128};
     use crate::tests::hash;
 
     #[test]

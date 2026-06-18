@@ -2,7 +2,7 @@ pub use ::xxhash_rust::xxh32::Xxh32 as Xxh32Hasher;
 use digest::typenum::U4;
 use digest::{FixedOutput, HashMarker, Output, OutputSizeUser, Update};
 
-use crate::common::{impl_hash_wrapper, HashWrapper};
+use crate::common::{HashWrapper, impl_hash_wrapper};
 
 #[derive(Clone)]
 pub struct Xxh32(Xxh32Hasher);

@@ -4,7 +4,7 @@ pub use ::fnv::FnvHasher;
 use digest::typenum::U8;
 use digest::{FixedOutput, HashMarker, Output, OutputSizeUser, Update};
 
-use crate::common::{impl_hash_wrapper, HashWrapper};
+use crate::common::{HashWrapper, impl_hash_wrapper};
 
 #[derive(Default)]
 pub struct Fnv(FnvHasher);
