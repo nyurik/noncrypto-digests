@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.9](https://github.com/nyurik/noncrypto-digests/compare/v0.3.8...v0.3.9) - 2026-06-18
+
+- Revert back to Digest 0.10.7
+
 ## [0.3.8](https://github.com/nyurik/noncrypto-digests/compare/v0.3.7...v0.3.8) - 2026-06-18
 
 ### Other
