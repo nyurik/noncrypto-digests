@@ -1,6 +1,6 @@
 [package]
 name = "noncrypto-digests"
-version = "0.3.7"
+version = "0.3.8"
 description = "Implement Digest trait for non-cryptographic hashing functions like fnv and xxhash"
 authors = ["Yuri Astrakhan <YuriAstrakhan@gmail.com>"]
 repository = "https://github.com/nyurik/noncrypto-digests"
