@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
-- update to digest 0.11.3 ([#35](https://github.com/nyurik/noncrypto-digests/pull/35))
-- [**breaking**] use digest 0.11 ([#32](https://github.com/nyurik/noncrypto-digests/pull/32))
+- [**breaking**] update to digest 0.11.3 ([#35](https://github.com/nyurik/noncrypto-digests/pull/35))
+- [**breaking**] use 2024 edition ([#32](https://github.com/nyurik/noncrypto-digests/pull/32))
 
 ## [0.3.9](https://github.com/nyurik/noncrypto-digests/compare/v0.3.8...v0.3.9) - 2026-06-18
 
