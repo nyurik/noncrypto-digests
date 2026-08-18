@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1](https://github.com/nyurik/noncrypto-digests/compare/v0.4.0...v0.4.1) - 2026-08-18
+
+### Other
+
+- [pre-commit.ci] pre-commit autoupdate ([#39](https://github.com/nyurik/noncrypto-digests/pull/39))
+- fix justfile cargo binstall
+- let rust fmt indent .rs files
+- disallow mem leaking in code
+- ignore CARGO_BUILD_WARNINGS in cargo-install
+- use Rust 1.97 cargo warnings
+- update .gitignore
+- format justfile
+- *(deps)* bump actions/checkout from 6 to 7 in the all-actions-version-updates group ([#36](https://github.com/nyurik/noncrypto-digests/pull/36))
+
 ## [0.4.0](https://github.com/nyurik/noncrypto-digests/compare/v0.3.9...v0.4.0) - 2026-06-18
 
 ### Other
